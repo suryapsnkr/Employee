@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %} User {% endblock %}
+{% block body %}
+<br><br>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <h7 class="display-7" style="color:red; text-align: center;"><strong>Welcome to LakshmiShree !</strong> One Employee view.</h7>
+</div>
+
+<div class="container my-3">
+  <h2 class="blog-post-title">{{user.first_name}} {{user.last_name}} <a href="#"><img class="gb_g gbii" align = "right" src="/static/img/user.png" width="" height="50" alt="25" aria-hidden="true" data-noaft=""></a></h2>
+  <hr>
+</div>
+
+<div class="container alert alert-warning fade show" role="alert">
+  <div class="container" style="margin: auto; border: 3px solid #ADD8E6;">
+<form>
+    <fieldset disabled>
+        <h2>Star Rating</h2>
+        <a href="/shree/employeer1/{{user.username}}"><span class="fa fa-star {% if review.rating > 0 %} checked {% endif %}"></span></a>
+        <a href="/shree/employeer2/{{user.username}}"><span class="fa fa-star {% if review.rating > 1 %} checked {% endif %}"></span></a>
+        <a href="/shree/employeer3/{{user.username}}"><span class="fa fa-star {% if review.rating > 2 %} checked {% endif %}"></span></a>
+        <a href="/shree/employeer4/{{user.username}}"><span class="fa fa-star {% if review.rating > 3 %} checked {% endif %}"></span></a>
+        <a href="/shree/employeer5/{{user.username}}"><span class="fa fa-star {% if review.rating > 4 %} checked {% endif %}"></span></a><br><br>
+        <label for="username">Name:</label>
+        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{user.first_name}} {{user.last_name}}"><br>
+        <label for="username">ID:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{user.employee_id}}"><br>
+        <label for="username">Role:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{user.role}}"><br>
+        <label for="username">Department:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{user.department}}"><br>
+        <label for="username">Branch:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{user.branch}}"><br>
+        <label for="username">Email:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{user.email}}"><br>
+        <label for="username">Mobile:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{user.mobile}}"><br>
+        <label for="username">Address:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{user.address}}"><br>
+    </fieldset>
+  </form></div></div><br><br>
+
+
+{% endblock body %}

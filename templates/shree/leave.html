@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block extra_head %}
+{% block title %} Leave {% endblock title %}
+{% endblock extra_head %}
+{% block homeactive %} active {% endblock homeactive %}
+
+{% block body %}
+<br><br>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <h7 class="display-7" style="color:red; text-align: center;"><strong>Welcome to LakshmiShree !</strong> Your leave view.</h7>
+  </div>
+
+  <div class="text m-2" style="float: left;">Left Days For Leave {{user.ldays}}</div>
+
+  <button type="button" class="btn btn-link m-0" style="float: right;" data-bs-toggle="modal" data-bs-target="#leaveModal">
+    New
+  </button><br><br>
+
+  {% if leave != None %}
+  <div class="container alert {% if leave.status == 'Pending' %} alert-warning {% elif leave.status == 'Rejected' %} alert-danger {% elif leave.status == 'Approved' %} alert-success {% else %} {% endif %} fade show" role="alert">
+  <div class="container" style="margin: auto; border: 3px solid #ADD8E6;">
+<form>
+    <fieldset disabled>
+        <br><label for="dateFrom">Date From:</label>
+        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{leave.df}}"><br>
+        <label for="dateTo">Date To:</label>
+        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{leave.dt}}"><br>
+        <label for="type">Type:</label>
+        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{leave.type}}"><br>
+        <label for="days">Days:</label>
+        <br><input type="number" id="disabledTextInput" class="form-control" placeholder="{{leave.days}}"><br>
+        <label for="status">Status:</label>
+        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{leave.status}}"><br>
+    </fieldset>
+  </form>
+</div>
+</div>
+{% else %}
+
+<h5 align="center" style="color:lightskyblue;">You have not any leave yet.</h5>
+{% endif %}
+
+
+ 
+    <!-- <div class="container alert alert-info fade show" role="alert">
+    <marquee behavior = "alternate" scrollamount = "5" style="color:red;"><strong>Welcome to LakshmiShree !</strong> Request for New Leave.</marquee>
+    <div class="container mb-3" style="margin: auto; border: 3px solid #ADD8E6;">
+    <form action="/shree/{{request.user}}/leave/" method="post">
+        <div class="mb-3">
+          <label for="dateFrom" class="form-label">Date From:</label>
+          <input type="text" class="form-control" id="df" name="df" placeholder="DD/MM/YYYY" onfocus="(this.type='date')">
+        </div>
+        <div class="mb-3">
+          <label for="dateTo" class="form-label">Date To:</label>
+          <input type="text" class="form-control" id="dt" name="dt" placeholder="DD/MM/YYYY" onfocus="(this.type='date')">
+        </div>
+        <div class="mb-3">
+            <label for="type" class="form-label">Type:</label>
+            <select class="form-select" id="type" name="type" aria-label="Default select example">
+                <option value="Casual">Casual</option>
+                <option value="Sick">Sick</option>
+                <option value="Emergency">Emergency</option>
+                <option value="Marriage">Marriage</option>
+                <option value="Bereavement">Bereavement</option>
+              </select>
+          </div>
+        <button type="submit" class="btn btn-primary">Submit</button><br><br>
+        {% csrf_token %}
+      </form>
+    </div>
+</div> -->
+
+
+<!-- Leave Modal -->
+<div class="modal fade" id="leaveModal" tabindex="-1" aria-labelledby="leaveModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leaveModalTitle" style="color:red;">Request for New Leave:</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> -->
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/shree/{{request.user}}/leave/" method="POST"> {% csrf_token %}
+          <div class="form-group">
+            <label for="username">Date From:</label>
+            <input type="text" class="form-control" id="df" name="df" placeholder="DD/MM/YYYY" onfocus="(this.type='date')" required>
+          </div>
+          <div class="form-group">
+            <label for="pass">Date To:</label>
+            <input type="text" class="form-control" id="dt" name="dt" placeholder="DD/MM/YYYY" onfocus="(this.type='date')" required>
+          </div>
+          <div class="form-group">
+            <label for="pass">Type:</label>
+            <select class="form-select" id="type" name="type" aria-label="Default select example">
+              <option value="Casual">Casual</option>
+              <option value="Sick">Sick</option>
+              <option value="Emergency">Emergency</option>
+              <option value="Marriage">Marriage</option>
+              <option value="Maternity">Maternity</option>
+            </select>
+          </div>
+
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock body %}

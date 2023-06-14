@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+
+<head>{% block head %}
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Font Awesome Icon Library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+
+<title>{% block title %} {% endblock title %}</title>
+<style>
+  .navbar{
+    position:fixed;
+    z-index: 1;
+    width:100%;
+    height:50px;
+    text-align:center;
+    vertical-align:middle;
+    line-height:15px;
+    top:0px;
+  }
+
+  .checked {
+  color: orange;
+  }
+
+  .srating {
+  float: right;
+  }
+
+
+</style>
+{% endblock head %}
+</head>
+
+<body>
+  
+  <nav class="navbar navbar-expand-lg navbar-dark bg-warning">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse bg-warning" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link {% block homeactive %} {% endblock homeactive %}" href="/shree/home/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% block aboutactive %} {% endblock aboutactive %}" href="/shree/about/">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% block contactactive %} {% endblock contactactive %}" href="/shree/contact/">Contacts</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link {% block employeesactive %} {% endblock employeesactive %}" href="/shree/users/">Employees</a>
+        </li>
+        {% endif %}
+        {% if request.user.type == "HOD" or request.user.type == "CEO" %}
+        <li class="nav-item">
+          <a class="nav-link {% block leavesactive %} {% endblock leavesactive %}" href="/shree/leaves/">Leaves</a>
+        </li>
+        {% endif %}
+      </ul>
+      </div>
+      
+    
+    
+
+    {% if user.is_authenticated %}
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Welcome {{request.user.first_name}} <img class="gb_g gbii" src="/static/img/user.png" width="" height="25" alt="25" aria-hidden="true" data-noaft="">
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark bg-warning">
+          <li><a class="dropdown-item" href="/shree/{{request.user}}/profile/">Profile</a></li>
+          {% if request.user.type == "HOD" or request.user.type == "E" %}
+          <li><a class="dropdown-item" href="/shree/{{request.user}}/leave/">Leave</a></li>
+          {% endif %}
+          <li><a class="dropdown-item" href="/shree/signOut/">Logout</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    {% else %}
+    <div>
+    <!-- <a class="btn btn-outline-success m-2 my-sm-0" href='#' type="submit">SignIn</a> -->
+    <button type="button" class="btn btn-warning m-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#loginModal">
+      Login
+    </button>
+    <!-- <a class="btn btn-outline-success m-2 my-sm-0" href='#' type="submit">SignUp</a> -->
+    
+    <!-- <button type="button" class="btn btn-success m-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#signupModal">
+      SignUp
+    </button> -->
+  </div>
+    {% endif %}
+  </nav>
+  
+
+  {% for message in messages %}
+  <br><br>
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <strong>Message : </strong> {{ message }}
+    <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
+  </div>
+  {% endfor %}
+
+  <!-- SignUp Modal -->
+  <!-- <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signupModalTitle" style="color:red;">SignUp Here</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/shree/signUp/" method='post'>
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username" name="username"
+                placeholder="Choose a unique username" required>
+            </div>
+            <div class="form-group">
+              <label for="fname">First Name</label>
+              <input type="text" class="form-control" id="fname" name="fname" placeholder="Enter Your First Name"
+                required>
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name</label>
+              <input type="text" class="form-control" id="lname" name="lname" placeholder="Enter Your Last Name"
+                required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Department</label>
+              <input type="text" class="form-control" id="department" name="department" placeholder="Enter Your Department" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Employee ID</label>
+              <input type="tel" class="form-control" id="employees_id" name="employees_id" placeholder="Enter Your ID" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Mobile</label>
+              <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="Enter Your Mobile" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Address</label>
+              <input type="text" class="form-control" id="address" name="address" placeholder="Enter Your Address" required>
+            </div>
+            <div class="form-group">
+              <label for="pass1">Choose a password</label>
+              <input type="password" class="form-control" id="pswd1" name="pswd1" placeholder="Choose Your Password"
+                required>
+            </div>
+            <div class="form-group">
+              <label for="pass2">Confirm Password</label>
+              <input type="password" class="form-control" id="pswd2" name="pswd2"
+                placeholder="Enter your password again" required>
+            </div>
+
+
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+
+
+
+
+  {% block body %}
+  {% endblock body %}
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalTitle" style="color:red;">Login Here</h5>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> -->
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/shree/signIn/" method="POST"> {% csrf_token %}
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="loginusername" name="loginusername"
+                placeholder="Enter your username " required>
+            </div>
+            <div class="form-group">
+              <label for="pass">Enter your password </label>
+              <input type="password" class="form-control" id="loginpassword" name="loginpassword"
+                placeholder="Enter your password " required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

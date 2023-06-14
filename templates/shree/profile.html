@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Profile Page{% endblock title %}
+{% block body %}
+<br><br>
+<centre>
+
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <h7 class="display-7" style="color:red; text-align: center;"><strong>Welcome to LakshmiShree !</strong> Your profile view.</h7>
+
+  </div>
+
+  {% if user.is_authenticated %}
+  
+<div class="container my-3">
+  <h2 class="blog-post-title">{{request.user.first_name}} {{request.user.last_name}} <a href="#"><img class="gb_g gbii" align = "right" src="/static/img/user.png" width="" height="50" alt="25" aria-hidden="true" data-noaft=""></a></h2>
+  <hr>
+</div>
+
+
+<div class="container alert alert-warning fade show" role="alert">
+<div class="container" style="margin: auto; border: 3px solid #ADD8E6;">
+  <form>
+    <fieldset disabled>
+        <h2>Star Rating</h2> 
+        <a href="/shree/employeer1/{{user.username}}"><span class="fa fa-star {% if review.rating > 0 %} checked {% endif %}"></span></a>
+        <a href="/shree/employeer2/{{user.username}}"><span class="fa fa-star {% if review.rating > 1 %} checked {% endif %}"></span></a>
+        <a href="/shree/employeer3/{{user.username}}"><span class="fa fa-star {% if review.rating > 2 %} checked {% endif %}"></span></a>
+        <a href="/shree/employeer4/{{user.username}}"><span class="fa fa-star {% if review.rating > 3 %} checked {% endif %}"></span></a>
+        <a href="/shree/employeer5/{{user.username}}"><span class="fa fa-star {% if review.rating > 4 %} checked {% endif %}"></span></a><br><br>
+        <label for="fname">First Name:</label>
+        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{request.user.first_name}}"><br>
+        <label for="lname">Last Name:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{request.user.last_name}}"><br>
+        <label for="ID">ID:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{request.user.employee_id}}"><br>
+        <label for="role">Role:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{request.user.role}}"><br>
+        <label for="department">Department:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{request.user.department}}"><br>
+        <label for="branch">Branch:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{request.user.branch}}"><br>
+        <label for="email">Email:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{request.user.email}}"><br>
+        <label for="mobile">Mobile:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{request.user.mobile}}"><br>
+        <label for="address">Address:</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{request.user.address}}"><br>
+    </fieldset>
+  </form></div></div>
+  {% endif %}
+</centre>
+
+{% endblock body %}
