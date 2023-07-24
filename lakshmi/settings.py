@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'shree.apps.ShreeConfig',
     'rest_framework',
 ]
-AUTH_USER_MODEL = "shree.User"
+AUTH_USER_MODEL = "shree.Employee"
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

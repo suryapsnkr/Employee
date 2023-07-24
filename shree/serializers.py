@@ -1,10 +1,10 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from shree.models import User
+from shree.models import Employee
 
-class UserSerializer(serializers.ModelSerializer):
+class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Employee
         fields = '__all__'
         
         

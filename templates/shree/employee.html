@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %} Employee {% endblock %}
+{% block body %}
+<br><br><br>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <h7 class="display-7" style="color:red; text-align: center;"><strong>Welcome to LakshmiShree !</strong> One Employee
+    view.</h7>
+</div>
+
+
+<div class="container">
+  <div class="container alert alert-warning fade show" role="alert">
+    <div class="container" style="border: 2px solid #e6d9ad;">
+      <div class="container my-3">
+        <h5 class="blog-post-title">{{temp.fname}} {{temp.lname}}<a href="#"><img class="gb_g gbii" align="right"
+              src="/static/img/user.png" width="35" height=""></a></h5>
+      </div>
+      <hr>
+      <form>
+        <fieldset disabled>
+          <h6>Star Rating</h6>
+          <a href="/shree/tempr1/{{temp.eid}}"><span
+              class="fa fa-star {% if review.rating > 0 %} checked {% endif %}"></span></a>
+          <a href="/shree/tempr2/{{temp.eid}}"><span
+              class="fa fa-star {% if review.rating > 1 %} checked {% endif %}"></span></a>
+          <a href="/shree/tempr3/{{temp.eid}}"><span
+              class="fa fa-star {% if review.rating > 2 %} checked {% endif %}"></span></a>
+          <a href="/shree/tempr4/{{temp.eid}}"><span
+              class="fa fa-star {% if review.rating > 3 %} checked {% endif %}"></span></a>
+          <a href="/shree/tempr5/{{temp.eid}}"><span
+              class="fa fa-star {% if review.rating > 4 %} checked {% endif %}"></span></a><br><br>
+          <label for="username">Name:</label>
+          <br><input type="text" id="disabledTextInput" class="form-control"
+            placeholder="{{temp.fname}} {{temp.lname}}"><br>
+          <label for="id">EID:</label>
+          <input type="text" id="disabledTextInput" class="form-control" placeholder="{{temp.eid}}"><br>
+          <label for="role">Role:</label>
+          <input type="text" id="disabledTextInput" class="form-control" placeholder="{{temp.role}}"><br>
+          <label for="department">Department:</label>
+          <input type="text" id="disabledTextInput" class="form-control" placeholder="{{temp.department}}"><br>
+          <label for="branch">Branch:</label>
+          <input type="text" id="disabledTextInput" class="form-control" placeholder="{{temp.branch}}"><br>
+          <label for="email">Email:</label>
+          <input type="text" id="disabledTextInput" class="form-control" placeholder="{{temp.email}}"><br>
+          {% if request.user.is_admin or request.user == temp %}
+          <label for="mobile">Mobile:</label>
+          <input type="text" id="disabledTextInput" class="form-control" placeholder="{{temp.mobile}}"><br>
+          {% endif %}
+          <label for="address">Address:</label>
+          <input type="text" id="disabledTextInput" class="form-control" placeholder="{{temp.address}}"><br>
+        </fieldset>
+      </form>
+    </div>
+  </div><br><br>
+</div>
+
+
+{% endblock body %}

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from dateutil import relativedelta
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
@@ -10,88 +10,88 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
-from shree.serializers import UserSerializer, UserSerializer
-from shree.models import Contact, Leave, Review, User
+from shree.serializers import EmployeeSerializer, EmployeeSerializer
+from shree.models import Contact, Leave, Review, Employee
 from django.core.mail import send_mail, EmailMultiAlternatives
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
 
-@api_view(['GET'])
-@permission_classes((permissions.AllowAny,))
-def getRoutes(request):
-    routes = [
-        {
-            'Endpoint': '/getUsers/',
-            'method': 'GET',
-            'body': None,
-            'description': 'Returns an array Users'
-        },
+# @api_view(['GET'])
+# @permission_classes((permissions.AllowAny,))
+# def getRoutes(request):
+#     routes = [
+#         {
+#             'Endpoint': '/getemps/',
+#             'method': 'GET',
+#             'body': None,
+#             'description': 'Returns an array Employees'
+#         },
 
-        {
-            'Endpoint': '/getUser/',
-            'method': 'GET',
-            'body': None,
-            'description': 'Returns an one array User'
-        },
+#         {
+#             'Endpoint': '/getemp/',
+#             'method': 'GET',
+#             'body': None,
+#             'description': 'Returns an one array Employee'
+#         },
 
-        {
-            'Endpoint': '/createUser/',
-            'method': 'POST',
-            'body': {"first_name","last_name","department","User_id","mobile","address","email","username","password"},
-            'description': 'Returns an one array createUser'
-        },
+#         {
+#             'Endpoint': '/createEmployee/',
+#             'method': 'POST',
+#             'body': {"first_name","last_name","department","eid","mobile","address","email","eid","password"},
+#             'description': 'Returns an one array createEmployee'
+#         },
         
 
-        # {
-        #     "body": {
-        #             "first_name": "Manish",
-        #             "last_name": "Rao",
-        #             "department": "Research",
-        #             "User_id": "1588",
-        #             "mobile": "9450016188",
-        #             "address": "Varanasi",
-        #             "email": "raomanish@gmail.com",
-        #             "username": "raomanish",
-        #             "password": "Manish@321"
-        #         }
-        # }
+#         # {
+#         #     "body": {
+#         #             "first_name": "Manish",
+#         #             "last_name": "Rao",
+#         #             "department": "Research",
+#         #             "eid": "1588",
+#         #             "mobile": "9450016188",
+#         #             "address": "Varanasi",
+#         #             "email": "raomanish@gmail.com",
+#         #             "eid": "raomanish",
+#         #             "password": "Manish@321"
+#         #         }
+#         # }
 
-    ]
-    return Response(routes)
-
-
-@api_view(['GET'])
-@permission_classes((permissions.AllowAny,))
-def getUsers(request):
-    users = User.objects.all()
-    serializer = UserSerializer(users, many = True)
-    return Response(serializer.data)
+#     ]
+#     return Response(routes)
 
 
-@api_view(['GET'])
-@permission_classes((permissions.AllowAny,))
-def getUser(request, username):
-    if User.objects.filter(username = username).exists():
-        user = User.objects.get(username = username)
-        serializer = UserSerializer(User, many = False)
-        return Response(serializer.data)
-    else:
-        messages = [{"message": "User does not exists."}]
-        return Response(messages)
+# @api_view(['GET'])
+# @permission_classes((permissions.AllowAny,))
+# def getemps(request):
+#     employees = Employee.objects.all()
+#     serializer = EmployeeSerializer(employees, many = True)
+#     return Response(serializer.data)
 
 
-@api_view(['POST'])
-@permission_classes((permissions.AllowAny,))
-def createUser(request):
-    data = request.data
-    user = User.objects.create_user(first_name=data["first_name"], last_name=data["last_name"], email=data["email"], username=data["username"], password=data["password"])
+# @api_view(['GET'])
+# @permission_classes((permissions.AllowAny,))
+# def getemp(request, eid):
+#     if employee.objects.filter(eid = eid).exists():
+#         employee = Employee.objects.get(eid = eid)
+#         serializer = EmployeeSerializer(Employee, many = False)
+#         return Response(serializer.data)
+#     else:
+#         messages = [{"message": "Employee does not exists."}]
+#         return Response(messages)
+
+
+# @api_view(['POST'])
+# @permission_classes((permissions.AllowAny,))
+# def createEmployee(request):
+#     data = request.data
+#     employee = Employee.objects.create_Employee(fname=data["fname"], lname=data["lname"], email=data["email"], eid=data["eid"], password=data["password"])
     
-    user = User(user = user, name = data["first_name"]+' '+data["last_name"], department = data["department"], user_id = data["User_id"], mobile = data["mobile"], email = data["email"], username = data["username"], address = data["address"])
-    user.save()
-    serializer = UserSerializer(user, many = False)
-    return Response(serializer.data)
+#     employee = Employee(employee = employee, name = data["fname"]+' '+data["lname"], department = data["department"], eid = data["eid"], mobile = data["mobile"], email = data["email"], eid = data["eid"], address = data["address"])
+#     Employee.save()
+#     serializer = EmployeeSerializer(Employee, many = False)
+#     return Response(serializer.data)
 
 
 def signOut(request):
@@ -103,15 +103,15 @@ def signOut(request):
 def signIn(request):
     if request.method == "POST":
         # Get the post parameters
-        loginusername = request.POST['loginusername']
+        logineid = request.POST['logineid']
         loginpassword = request.POST['loginpassword']
         
         try:
-            user=User.objects.get(username = loginusername, password = loginpassword)
+            employee=Employee.objects.get(eid = logineid, password = loginpassword)
         except:
-            user=authenticate(username = loginusername, password = loginpassword)
-        if user is not None:
-            auth_login(request, user)
+            employee=authenticate(eid = logineid, password = loginpassword)
+        if employee is not None:
+            auth_login(request, employee)
             messages.info(request, "You have successfully logged in.")
             return redirect("home")
         else:
@@ -121,7 +121,7 @@ def signIn(request):
     return HttpResponse("404- Not found.")
 
 
-def SignUp(request):
+def signUp(request):
     if request.method=="POST":
         # Get the post parameters
         type=request.POST['type']
@@ -134,115 +134,126 @@ def SignUp(request):
         mobile=request.POST['mobile']
         email=request.POST['email']
         address=request.POST['address']
-        username=request.POST['username']
-        pass1=request.POST['pass1']
-        pass2=request.POST['pass2']
+        pass1=request.POST['pswd1']
+        pass2=request.POST['pswd2']
 
-        # check for errorneous input
+
         if pass1 == pass2:
-            # Create the user
-            myuser = User.objects.create_user(type, fname, lname, eid, role, department, branch, mobile, email, address, username, pass1)
-            myuser.save()
-            messages.success(request, " Your User has been successfully created")
-            return redirect('home')
+            if Employee.objects.filter(eid=eid).exists():
+                messages.warning(request, " Your Employee has been already exists")
+                return redirect('home')
+            else:
+                # Create the Employee
+                emp = Employee.objects.create_user(eid=eid, password=pass1)
+                emp.type=type
+                emp.fname=fname
+                emp.lname=lname
+                emp.role=role
+                emp.department=department
+                emp.branch=branch
+                emp.mobile=mobile
+                emp.email=email
+                emp.address=address
+                emp.save()
+                messages.success(request, " Your Employee has been successfully created")
+                return redirect('home')
         else:
-            messages.success(request, " Your User Passwords are Miss-Matched")
+            messages.success(request, " Your Employee Passwords are Miss-Matched")
             return redirect('home')
 
     else:
         return HttpResponse("404 - Not found")
 
     
-def rate1(request, username):
-    tuser = User.objects.filter(username=username).first()
-    if Review.objects.filter(fuser=request.user, tuser=tuser).exists():
-        review = Review.objects.get(fuser=request.user, tuser=tuser)
+def rate1(request, eid):
+    temp = Employee.objects.filter(eid=eid).first()
+    if Review.objects.filter(femp=request.user, temp=temp).exists():
+        review = Review.objects.get(femp=request.user, temp=temp)
         review.rating = 1
         review.save()
     else:
-        rating = Review(fuser=request.user, tuser=tuser, rating=1)
+        rating = Review(femp=request.user, temp=temp, rating=1)
         rating.save()
-    return redirect('user',username)
+    return redirect('employee',eid)
 
-def rate2(request, username):
-    tuser = User.objects.filter(username=username).first()
-    if Review.objects.filter(fuser=request.user, tuser=tuser).exists():
-        review = Review.objects.get(fuser=request.user, tuser=tuser)
+def rate2(request, eid):
+    temp = Employee.objects.filter(eid=eid).first()
+    if Review.objects.filter(femp=request.user, temp=temp).exists():
+        review = Review.objects.get(femp=request.user, temp=temp)
         review.rating = 2
         review.save()
     else:
-        rating = Review(fuser=request.user, tuser=tuser, rating=2)
+        rating = Review(femp=request.user, temp=temp, rating=2)
         rating.save()
-    return redirect('user',username)
+    return redirect('employee',eid)
 
-def rate3(request, username):
-    tuser = User.objects.filter(username=username).first()
-    print(tuser)
-    if Review.objects.filter(fuser=request.user, tuser=tuser).exists():
-        review = Review.objects.get(fuser=request.user, tuser=tuser)
+def rate3(request, eid):
+    temp = Employee.objects.filter(eid=eid).first()
+    print(temp)
+    if Review.objects.filter(femp=request.user, temp=temp).exists():
+        review = Review.objects.get(femp=request.user, temp=temp)
         review.rating = 3
         review.save()
     else:
-        rating = Review(fuser=request.user, tuser=tuser, rating=3)
+        rating = Review(femp=request.user, temp=temp, rating=3)
         rating.save()
-    return redirect('user',username)
+    return redirect('employee',eid)
 
-def rate4(request, username):
-    tuser = User.objects.filter(username=username).first()
-    if Review.objects.filter(fuser=request.user, tuser=tuser).exists():
-        review = Review.objects.get(fuser=request.user, tuser=tuser)
+def rate4(request, eid):
+    temp = Employee.objects.filter(eid=eid).first()
+    if Review.objects.filter(femp=request.user, temp=temp).exists():
+        review = Review.objects.get(femp=request.user, temp=temp)
         review.rating = 4
         review.save()
     else:
-        rating = Review(fuser=request.user, tuser=tuser, rating=4)
+        rating = Review(femp=request.user, temp=temp, rating=4)
         rating.save()
-    return redirect('user',username)
+    return redirect('employee',eid)
 
-def rate5(request, username):
-    tuser = User.objects.filter(username=username).first()
-    if Review.objects.filter(fuser=request.user, tuser=tuser).exists():
-        review = Review.objects.get(fuser=request.user, tuser=tuser)
+def rate5(request, eid):
+    temp = Employee.objects.filter(eid=eid).first()
+    if Review.objects.filter(femp=request.user, temp=temp).exists():
+        review = Review.objects.get(femp=request.user, temp=temp)
         review.rating = 5
         review.save()
     else:
-        rating = Review(fuser=request.user, tuser=tuser, rating=5)
+        rating = Review(femp=request.user, temp=temp, rating=5)
         rating.save()
-    return redirect('user',username)
+    return redirect('employee',eid)
     
 @login_required
-def user(request, username):
-    tuser=User.objects.get(username=username)
-    if Review.objects.filter(fuser=request.user, tuser=tuser).exists():
-        review=Review.objects.get(fuser=request.user, tuser=tuser)
+def employee(request, eid):
+    temp=Employee.objects.get(eid=eid)
+    if Review.objects.filter(femp=request.user, temp=temp).exists():
+        review=Review.objects.get(femp=request.user, temp=temp)
     else:
         review = None
-    context={'user':tuser, 'review':review}
-    return render(request,'shree/user.html', context)
+    context={'temp':temp, 'review':review}
+    return render(request,'shree/employee.html', context)
 
 @login_required
-def users(request):
-    users = User.objects.all()
+def employees(request):
+    emps = Employee.objects.all()
     reviews=Review.objects.all()
-    for u in users:
+    for e in emps:
         n=0
         a=0
         for r in reviews:
-           if u.id == r.tuser.id:
+           if e.id == r.temp.id:
                n += 1
                a += r.rating
-               ae = User.objects.get(id = r.tuser.id)
+               ae = Employee.objects.get(id = r.temp.id)
                ae.arating = a/n
                ae.save()
-    
-    return render(request, 'shree/users.html', {'users': users, 'reviews':reviews})
-
-@login_required
-def profile(request, username):
-    if Review.objects.filter(fuser=request.user,tuser=request.user).exists():
-        review=Review.objects.get(tuser=request.user, fuser=request.user)
+    if request.method=="POST":
+        eid=request.POST['eid']
+        if Employee.objects.filter(eid = eid).exists():
+            f = Employee.objects.get(eid = eid)
+        else:
+            f=''
     else:
-        review = None
-    return render(request, 'shree/profile.html', {'review':review})
+        f=''
+    return render(request, 'shree/employees.html', {'emps': emps, 'reviews':reviews,'f':f})
 
 
 def contact(request):
@@ -292,19 +303,16 @@ def ceo(request):
 
 
 @login_required
-def leave(request,username):
-    user = User.objects.get(username= request.user)
-    if Leave.objects.filter(user=request.user).exists():
-        leave = Leave.objects.filter(user=request.user).last()
+def leave(request,eid):
+    emp = Employee.objects.get(eid=request.user)
+    if date.today().day == 1:
+        emp.ldays += 2
+    if Leave.objects.filter(emp=request.user).exists():
+        leaves = Leave.objects.filter(emp=request.user).all()
     else:
-        leave = None
-    if leave != None:
-        if leave.status == 'Approved':
-            user.ldays = 24 - leave.days
-            user.save()
-        # elif leave.status == 'Rejected':
-        #     User.ldays += leave.days
-        #     User.save()
+        leaves = None
+        emp.ldays = 2
+        emp.save()
 
     if request.method == 'POST':
         df = request.POST['df']
@@ -316,15 +324,15 @@ def leave(request,username):
         date2 = datetime.strptime(f'{dt}', "%Y-%m-%d")
         # Calculate the difference between the two dates
         difference = relativedelta.relativedelta(date2, date1)
-        days = difference.days
-        if user.type == "HOD":
-            leave = Leave(user=request.user, df=df, dt=dt, type=type, days=days, status="Pending", hod_approved=True)
-        elif user.type == "E":
-            leave = Leave(user=request.user, df=df, dt=dt, type=type, days=days, status="Pending")
+        days = difference.days+1
+        if emp.type == "HOD":
+            leave = Leave(emp=request.user, df=df, dt=dt, type=type, days=days, status="Pending", hod_approved=True)
+        elif emp.type == "E":
+            leave = Leave(emp=request.user, df=df, dt=dt, type=type, days=days, status="Pending")
         leave.save()
-        return redirect('leave',user)
+        return redirect('leave',eid)
 
-    return render(request, 'shree/leave.html',{'user':user, 'leave':leave})
+    return render(request, 'shree/leave.html',{'emp':emp, 'leaves':leaves})
 
 
 @login_required
@@ -334,28 +342,31 @@ def leaves(request):
 
 
 @login_required
-def hod_verify(request, request_id):
-    # Verify the holiday request by HoD
-    leave = Leave.objects.get(id=request_id)
+def hod_verify(request, rid):
+    # Verify the holiday request by HOD
+    leave = Leave.objects.get(id=rid)
     leave.hod_approved = True
     leave.save()
     return redirect('leaves')
 
 
 @login_required
-def ceo_verify(request, request_id):
+def ceo_verify(request, rid):
     # Verify the holiday request by CEO
-    leave = Leave.objects.get(id=request_id)
+    leave = Leave.objects.get(id=rid)
     leave.ceo_approved = True
     leave.approved = True
     leave.status = "Approved"
     leave.save()
+    emp = Employee.objects.get(eid=leave.emp)
+    emp.ldays -= leave.days
+    emp.save()
     return redirect('leaves')
 
 @login_required
-def hod_rejection(request, request_id):
-    # Verify the holiday request by CEO
-    leave = Leave.objects.get(id=request_id)
+def hod_rejection(request, rid):
+    # Verify the holiday request by HOD
+    leave = Leave.objects.get(id=rid)
     leave.hod_approved = False
     leave.approved = False
     leave.status = "Rejected"
@@ -363,19 +374,14 @@ def hod_rejection(request, request_id):
     return redirect('leaves')
 
 @login_required
-def ceo_rejection(request, request_id):
+def ceo_rejection(request, rid):
     # Verify the holiday request by CEO
-    leave = Leave.objects.get(id=request_id)
+    leave = Leave.objects.get(id=rid)
     leave.ceo_approved = False
     leave.approved = False
     leave.status = "Rejected"
     leave.save()
     return redirect('leaves')
-
-# @user_passes_test(lambda u: u.is_superuser)
-# def leaves(request):
-#     leaves = Leave.objects.all()
-#     return render(request, 'shree/leaves.html', {'leaves': leaves})
 
 
 

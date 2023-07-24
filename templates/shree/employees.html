@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% block title %} Employees {% endblock title %}
+{% block usersactive %} active {% endblock usersactive %}
+{% block employeesactive %} active {% endblock employeesactive %}
+{% block body %}
+<br><br><br>
+
+<centre>
+
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <h7 style="color:red; text-align: center;"><strong>Welcome to LakshmiShree !</strong> All Employees view.</h7>
+  </div>
+  {% if request.user.is_admin == True %}
+  <button type="button" class="btn link-primary" style="float: right;" data-bs-toggle="modal"
+    data-bs-target="#signupModal">
+    New
+  </button>
+  {% endif %}
+  <div class="container-fluid">
+    <form action="/shree/employees/" method="post">
+      <div class="form-group">
+        <label for="fname">EID:</label><br>
+        <input type="text" id="eid" name="eid">
+        <input type="submit" value="Filter">
+        {% csrf_token %}
+      </div>
+    </form>
+  </div>
+
+  <br><br>
+  {% for e in emps %}
+  {% if e.eid == f.eid or f == '' %}
+  <div class="container-fluid p-4">
+    <div class="row no-gutters border rounded overflow-hidden flex-md-row shadow-sm position-relative">
+      <!-- <button type="button" class="btn btn-link" style="float: right;" data-bs-toggle="modal" data-bs-target="#{{e.eid}}">Rate Here</button> -->
+      <div class="col p-2 d-flex flex-column position-static">
+        <h7 class="d-inline-block text-align">Rating Review</h7>
+        <div class="col d-flex flex-row position-static">
+          <span
+            class="fa fa-star {% if e.arating > 0.5 %} checked {% elif e.arating > 0 %} fa fa-star-half-o checked {% endif %}"></span>
+          <span
+            class="fa fa-star {% if e.arating > 1.5 %} checked {% elif e.arating > 1 %} fa fa-star-half-o checked {% endif %}"></span>
+          <span
+            class="fa fa-star {% if e.arating > 2.5 %} checked {% elif e.arating > 2 %} fa fa-star-half-o checked {% endif %}"></span>
+          <span
+            class="fa fa-star {% if e.arating > 3.5 %} checked {% elif e.arating > 3 %} fa fa-star-half-o checked {% endif %}"></span>
+          <span
+            class="fa fa-star {% if e.arating > 4.5 %} checked {% elif e.arating > 4 %} fa fa-star-half-o checked {% endif %}"></span>
+          <div class="container-fluid"><img src="/static/img/user.png" style="float: right; width: 35px; height:35px;">
+          </div>
+        </div>
+        <strong class="d-inline-block text-primary">{{e.fname}} {{e.lname}}<a href="/shree/employees/{{e.eid}}/"
+            class="btn link-primary mt-1" style="float: right;">View</a></strong>
+        <h7 class="d-inline-block text-primary">{{e.role}} || {{e.department}} || {{e.branch}}</h7>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div class="modal fade" id="{{e.eid}}" tabindex="-1" aria-labelledby="reviewModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reviewModalTitle" style="color:red;">Rate Here</h5>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> -->
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <a href="/shree/tempr1/{{e.eid}}"><span
+                class="fa fa-star {% if e.arating > 0 %} checked {% endif %}"></span></a>
+            <a href="/shree/tempr2/{{e.eid}}"><span
+                class="fa fa-star {% if e.arating > 1 %} checked {% endif %}"></span></a>
+            <a href="/shree/tempr3/{{e.eid}}"><span
+                class="fa fa-star {% if e.arating > 2 %} checked {% endif %}"></span></a>
+            <a href="/shree/tempr4/{{e.eid}}"><span
+                class="fa fa-star {% if e.arating > 3 %} checked {% endif %}"></span></a>
+            <a href="/shree/tempr5/{{e.eid}}"><span
+                class="fa fa-star {% if e.arating > 4 %} checked {% endif %}"></span></a>
+          </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</centre>
+
+
+
+
+
+<!-- SignUp Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signupModalTitle" style="color:red;">Create User Here</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> -->
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/shree/signUp/" method='post'>
+          <div class="form-group">
+            <label for="type">Type</label>
+            <select class="form-select" id="type" name="type" aria-label="Default select example">
+              <option value="E">E</option>
+              <option value="HOD">HOD</option>
+              <option value="CEO">CEO</option>
+              <option value="BM">BM</option>
+            </select>
+            <!-- <input type="text" class="form-control" id="type" name="type" placeholder="Choose Employee Type" required> -->
+          </div>
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" class="form-control" id="fname" name="fname" placeholder="Enter Your First Name"
+              required>
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" class="form-control" id="lname" name="lname" placeholder="Enter Your Last Name" required>
+          </div>
+          <div class="form-group">
+            <label for="eid">Employee ID</label>
+            <input type="text" class="form-control" id="eid" name="eid" placeholder="Enter Your ID" required>
+          </div>
+          <div class="form-group">
+            <label for="role">Role</label>
+            <input type="text" class="form-control" id="role" name="role" placeholder="Enter Your Role" required>
+          </div>
+          <div class="form-group">
+            <label for="department">Department</label>
+            <input type="text" class="form-control" id="department" name="department"
+              placeholder="Enter Your Department" required>
+          </div>
+          <div class="form-group">
+            <label for="branch">Branch</label>
+            <input type="text" class="form-control" id="branch" name="branch" placeholder="Enter Your Branch" required>
+          </div>
+          <div class="form-group">
+            <label for="mobile">Mobile</label>
+            <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="Enter Your Mobile" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" class="form-control" id="address" name="address" placeholder="Enter Your Address"
+              required>
+          </div>
+          <div class="form-group">
+            <label for="pass1">Choose Password</label>
+            <input type="password" class="form-control" id="pswd1" name="pswd1" placeholder="Choose Your Password"
+              required>
+          </div>
+          <div class="form-group">
+            <label for="pass2">Confirm Password</label>
+            <input type="password" class="form-control" id="pswd2" name="pswd2" placeholder="Enter Your Password Again"
+              required>
+          </div>
+
+
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}

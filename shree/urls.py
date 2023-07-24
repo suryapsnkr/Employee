@@ -1,54 +1,54 @@
 from django.urls import path
 
-from . import views
+from shree import views
 
-from shree.models import User
+from shree.models import Employee
 from django.urls import path, include
 from rest_framework import routers, serializers, viewsets
 
 # Serializers define the API representation.
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'is_staff']
+        model = Employee
+        fields = ['url', 'Employeename', 'email', 'is_staff']
 
 # ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
 
 # Routers provide an easy way of automatically determining the URL conf.
-users = routers.DefaultRouter()
-users.register(r'', UserViewSet)
+Employees = routers.DefaultRouter()
+Employees.register(r'', EmployeeViewSet)
 
 
 
 urlpatterns = [
     
-    # path('users/', include(users.urls)),
-    path('getRoutes/', views.getRoutes),
-    path('getUsers/<str:username>/', views.getUser),
-    path('getUsers/', views.getUsers),
-    path('createUser/', views.createUser),
+    # path('Employees/', include(Employees.urls)),
+    # path('getRoutes/', views.getRoutes),
+    # path('getEmployees/<str:eid>/', views.getEmployee),
+    # path('getEmployees/', views.getEmployees),
+    # path('createEmployee/', views.createEmployee),
 
 
-    path('users/<str:username>/', views.user, name='user'),
-    path('users/', views.users),
-    path('<str:username>/profile/', views.profile),
+    path('employees/<int:eid>/', views.employee, name='employee'),
+    path('employees/', views.employees, name= 'employees'),
     path('signOut/', views.signOut),
     path('signIn/', views.signIn),
+    path('signUp/', views.signUp),
     path('contact/', views.contact, name='contact'),
     path('about/', views.about),
     path('home/', views.home, name = 'home'),
-    path('employeer1/<str:username>/', views.rate1),
-    path('employeer2/<str:username>/', views.rate2),
-    path('employeer3/<str:username>/', views.rate3),
-    path('employeer4/<str:username>/', views.rate4),
-    path('employeer5/<str:username>/', views.rate5),
+    path('tempr1/<str:eid>/', views.rate1),
+    path('tempr2/<str:eid>/', views.rate2),
+    path('tempr3/<str:eid>/', views.rate3),
+    path('tempr4/<str:eid>/', views.rate4),
+    path('tempr5/<str:eid>/', views.rate5),
     path('leaves/', views.leaves, name='leaves'),
-    path('hod_verify/<int:request_id>/', views.hod_verify),
-    path('ceo_verify/<int:request_id>/', views.ceo_verify),
-    path('<str:username>/leave/', views.leave, name='leave'),
-    path('hod_rejection/<int:request_id>/', views.hod_rejection),
-    path('ceo_rejection/<int:request_id>/', views.ceo_rejection),
+    path('hod_verify/<int:rid>/', views.hod_verify),
+    path('ceo_verify/<int:rid>/', views.ceo_verify),
+    path('<str:eid>/leave/', views.leave, name='leave'),
+    path('hod_rejection/<int:rid>/', views.hod_rejection),
+    path('ceo_rejection/<int:rid>/', views.ceo_rejection),
 ]

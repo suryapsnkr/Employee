@@ -1,82 +1,140 @@
 {% extends 'base.html' %}
-{% block extra_head %}
 {% block title %} Leaves {% endblock title %}
-{% endblock extra_head %}
 {% block leavesactive %} active {% endblock leavesactive %}
-
 {% block body %}
-<br><br>
+<br><br><br>
 <centre>
-  
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <h7 style="color:red; text-align: center;"><strong>Welcome to LakshmiShree !</strong> All Employees view.</h7>
-    </div>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <h7 style="color:red; text-align: center;"><strong>Welcome to LakshmiShree !</strong> All Employees view.</h7>
+  </div>
   {% if request.user.type == "HOD" %}
   {% for l in leaves %}
-  {% if l != None and l.hod_approved != True and l.status != "Rejected" and request.user.department == l.user.department and request.user.branch == l.user.branch %}
-  <div class="container my-3">
-    <h2 class="blog-post-title">{{l.user.first_name}} {{ l.user.employee_id}}<a href="#"><img class="gb_g gbii" align = "right" src="/static/img/user.png" width="" height="50" alt="25" aria-hidden="true" data-noaft=""></a></h2>
-    <hr>{{request.user.branch}} {{l.user.branch}}
+  {% if l != None and l.hod_approved != True and l.status != "Rejected" and request.user.department == l.emp.department and request.user.branch == l.emp.branch %}
+  <div class="container">
+    <div
+      class="container alert {% if l.status == 'Pending' %} alert-warning {% elif l.status == 'Rejected' %} alert-danger {% elif l.status == 'Approved' %} alert-success {% else %} {% endif %} fade show"
+      role="alert">
+      <div class="container mb-3" style="margin: auto; border: 2px solid #e6d9ad;">
+        <div class="container my-3">
+          <h5 class="blog-post-title">{{l.emp.fname}} {{l.emp.lname}}<a href="#"><img class="gb_g gbii" align="right"
+                src="/static/img/user.png" width="30" height=""></a></h5>
+        </div>
+        <hr>
+        <form>
+          <fieldset disabled>
+            <label for="id">EID:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.emp.eid}}"><br>
+            <label for="dateFrom">Date From:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.df}}"><br>
+            <label for="dateTo">Date To:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.dt}}"><br>
+            <label for="type">Type:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.type}}"><br>
+            <label for="days">Days:</label>
+            <br><input type="number" id="disabledTextInput" class="form-control" placeholder="{{l.days}}"><br>
+            <label for="status">Status:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.status}}"><br>
+          </fieldset>
+        </form>
+        {% if l.status != "Rejected" and l.status != "Approved" %}
+        <p><a href="/shree/hod_verify/{{l.id}}/"
+            class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Verify</a></p>
+        <p><a href="/shree/hod_rejection/{{l.id}}/"
+            class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Reject</a></p>
+        {% endif %}
+      </div>
+    </div>
   </div>
-  <div class="container alert {% if l.status == 'Pending' %} alert-warning {% elif l.status == 'Rejected' %} alert-danger {% elif l.status == 'Approved' %} alert-success {% else %} {% endif %} fade show" role="alert">
-  <div class="container mb-3" style="margin: auto; border: 3px solid #ADD8E6;">
-<form>
-    <fieldset disabled>
-        <br><label for="dateFrom">Date From:</label>
-        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.df}}"><br>
-        <label for="dateTo">Date To:</label>
-        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.dt}}"><br>
-        <label for="type">Type:</label>
-        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.type}}"><br>
-        <label for="days">Days:</label>
-        <br><input type="number" id="disabledTextInput" class="form-control" placeholder="{{l.days}}"><br>
-        <label for="status">Status:</label>
-        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.status}}"><br>
-    </fieldset>
-  </form>
-  <p><a href="/shree/hod_verify/{{l.id}}/" class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Verify</a></p>
-  <p><a href="/shree/hod_rejection/{{l.id}}/" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Reject</a></p>
-</div>
-</div>
-{% else %}
+  {% else %}
 
-{% endif %}
-  
-{% endfor %}
+  {% endif %}
 
-{% elif request.user.type == "CEO" %}
-{% for l in leaves %}
+  {% endfor %}
+
+  {% elif request.user.type == "CEO" %}
+  {% for l in leaves %}
   {% if l != None and l.hod_approved == True and l.ceo_approved != True and l.status != "Rejected" %}
-  <div class="container my-3">
-    <h2 class="blog-post-title">{{l.user}}<a href="#"><img class="gb_g gbii" align = "right" src="/static/img/user.png" width="" height="50" alt="25" aria-hidden="true" data-noaft=""></a></h2>
-    <hr>
+  <div class="container">
+    <div
+      class="container alert {% if l.status == 'Pending' %} alert-warning {% elif l.status == 'Rejected' %} alert-danger {% elif l.status == 'Approved' %} alert-success {% else %} {% endif %} fade show"
+      role="alert">
+      <div class="container mb-3" style="margin: auto; border: 2px solid #e6d9ad;">
+        <div class="container my-3">
+          <h5 class="blog-post-title">{{l.emp.fname}} {{l.emp.lname}}<a href="#"><img class="gb_g gbii" align="right"
+                src="/static/img/user.png" width="" height="50" alt="25" aria-hidden="true" data-noaft=""></a></h5>
+        </div>
+        <hr>
+        <form>
+          <fieldset disabled>
+            <label for="id">EID:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.emp.eid}}"><br>
+            <label for="dateFrom">Date From:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.df}}"><br>
+            <label for="dateTo">Date To:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.dt}}"><br>
+            <label for="type">Type:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.type}}"><br>
+            <label for="days">Days:</label>
+            <br><input type="number" id="disabledTextInput" class="form-control" placeholder="{{l.days}}"><br>
+            <label for="status">Status:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.status}}"><br>
+          </fieldset>
+        </form>
+        {% if l.status != "Rejected" and l.status != "Approved" %}
+        <p><a href="/shree/ceo_verify/{{l.id}}/"
+            class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Approve</a>
+        </p>
+        <p><a href="/shree/ceo_rejection/{{l.id}}/"
+            class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Reject</a></p>
+        {% endif %}
+      </div>
+    </div>
   </div>
-  <div class="container alert {% if l.status == 'Pending' %} alert-warning {% elif l.status == 'Rejected' %} alert-danger {% elif l.status == 'Approved' %} alert-success {% else %} {% endif %} fade show" role="alert">
-  <div class="container mb-3" style="margin: auto; border: 3px solid #ADD8E6;">
-<form>
-    <fieldset disabled>
-        <br><label for="dateFrom">Date From:</label>
-        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.df}}"><br>
-        <label for="dateTo">Date To:</label>
-        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.dt}}"><br>
-        <label for="type">Type:</label>
-        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.type}}"><br>
-        <label for="days">Days:</label>
-        <br><input type="number" id="disabledTextInput" class="form-control" placeholder="{{l.days}}"><br>
-        <label for="status">Status:</label>
-        <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.status}}"><br>
-    </fieldset>
-  </form>
-  <p><a href="/shree/ceo_verify/{{l.id}}/" class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Verify</a></p>
-  <p><a href="/shree/ceo_rejection/{{l.id}}/" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Reject</a></p>
-</div>
-</div>
-{% else %}
+  {% else %}
 
-{% endif %}
-  
-{% endfor %}
-{% endif %}
+  {% endif %}
+
+  {% endfor %}
+
+
+  {% elif request.user.is_admin %}
+  {% for l in leaves %}
+  {% if l != None and l.status == "Rejected" or l.status == "Approved" %}
+  <div class="container">
+    <div
+      class="container alert {% if l.status == 'Pending' %} alert-warning {% elif l.status == 'Rejected' %} alert-danger {% elif l.status == 'Approved' %} alert-success {% else %} {% endif %} fade show"
+      role="alert">
+      <div class="container mb-3" style="margin: auto; border: 2px solid #e6d9ad;">
+        <div class="container my-3">
+          <h5 class="blog-post-title">{{l.emp.fname}} {{l.emp.lname}}<a href="#"><img class="gb_g gbii" align="right"
+                src="/static/img/user.png" width="" height="50" alt="25" aria-hidden="true" data-noaft=""></a></h5>
+        </div>
+        <hr>
+        <form>
+          <fieldset disabled>
+            <label for="id">EID:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.emp.eid}}"><br>
+            <label for="dateFrom">Date From:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.df}}"><br>
+            <label for="dateTo">Date To:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.dt}}"><br>
+            <label for="type">Type:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.type}}"><br>
+            <label for="days">Days:</label>
+            <br><input type="number" id="disabledTextInput" class="form-control" placeholder="{{l.days}}"><br>
+            <label for="status">Status:</label>
+            <br><input type="text" id="disabledTextInput" class="form-control" placeholder="{{l.status}}"><br>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% else %}
+
+  {% endif %}
+
+  {% endfor %}
+  {% endif %}
 </centre>
 
 {% endblock body %}
